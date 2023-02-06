@@ -61,23 +61,42 @@ SET description = "Le terminal Bash est l'interface en ligne de commande par dé
 -- Supprimez la relation entre un student et un tag :
 -- - student : Zacharie Evrard
 -- - tag : Terminal Bash
+DELETE FROM student_tag
+WHERE student_id = (SELECT id FROM student WHERE firstname  = 'Zacharie' AND lastname ='Evrard')
+AND tag_id = (SELECT id FROM tag WHERE name  = 'Terminal Bash');
 
 -- Exo 2.7
 -- Supprimez la relation entre un student et un project :
 -- - student : Arthur Lacombe
 -- - project : Dicta quia at qui
-
+DELETE FROM project_tag
+WHERE tag_id =(SELECT id FROM student WHERE firstname ='Arthur' AND lastname = 'Lacombe')
+AND project_id = (SELECT id from project WHERE name = 'Dicta Quia at qui')
 -- Exo 2.8
 -- Supprimez toutes les relations entre un student et ses tags :
 -- - student : Odette Thomas
+DELETE FROM student_tag
+WHERE student_id =(SELECT id FROM student WHERE firstname = 'Odette' AND lastname = 'Thomas')
 
 -- Exo 2.9
 -- Supprimez un student :
 -- - student : Odette Thomas
+DELETE from student
+where id =(SELECT id FROM student WHERE firstname ='Odette' AND lastname = 'Thomas')
 
 -- Exo 2.10
 -- Supprimez un project et toutes les relations avec ses dépendances, c-à-d les relations avec des student et les relations avec des tags :
 -- - project : Ut delectus explicabo.
 -- Note : vous devez supprimez les relations avec les dépendances mais pas les dépendances.
 -- Autrement dit ne supprimez aucun student ni aucun tag.
+DELETE
+FROM project_tag
+WHERE project_id = (SELECT id FROM project WHERE name = 'Ut delectus explicabo.')
 
+UPDATE student
+SET project_id = NULL
+WHERE project_id = (SELECT id FROM project WHERE name = 'Ut delectus explicabo.')
+
+DELETE
+FROM project
+WHERE name = 'Ut delectus explicabo.'
